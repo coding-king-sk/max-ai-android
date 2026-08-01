@@ -5,40 +5,36 @@ import com.max.ai.data.local.datastore.UserPreferences
 import com.max.ai.data.repository.MemoryRepository
 import com.max.ai.data.repository.NotesRepository
 import com.max.ai.core.network.ApiClient
+import com.max.ai.core.voice.WakeWordEngine
+import com.max.ai.core.voice.GeminiLiveClient
+import com.max.ai.core.voice.SttEngine
+import com.max.ai.core.voice.TtsEngine
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Module @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides @Singleton
-    fun provideAppDatabase(app: android.app.Application): AppDatabase = AppDatabase.getInstance(app)
-
+    fun provideDb(a: android.app.Application): AppDatabase = AppDatabase.getInstance(a)
     @Provides @Singleton
-    fun provideUserPreferences(app: android.app.Application): UserPreferences = UserPreferences(app)
-
+    fun providePrefs(a: android.app.Application): UserPreferences = UserPreferences(a)
     @Provides @Singleton
-    fun provideMemoryRepository(db: AppDatabase): MemoryRepository = MemoryRepository(db.memoryDao())
-
+    fun provideMemRepo(db: AppDatabase): MemoryRepository = MemoryRepository(db.memoryDao())
     @Provides @Singleton
-    fun provideNotesRepository(db: AppDatabase): NotesRepository = NotesRepository(db.notesDao())
-
+    fun provideNotesRepo(db: AppDatabase): NotesRepository = NotesRepository(db.notesDao())
     @Provides @Singleton
-    fun provideApiClient(): ApiClient = ApiClient()
-
+    fun provideApi(): ApiClient = ApiClient()
     @Provides @Singleton
-    fun provideWakeWordEngine(): com.max.ai.core.wakeword.WakeWordEngine = com.max.ai.core.wakeword.WakeWordEngine()
-
+    fun provideWakeWord(): WakeWordEngine = WakeWordEngine()
     @Provides @Singleton
-    fun provideGeminiLiveClient(api: ApiClient): com.max.ai.core.voice.GeminiLiveClient = com.max.ai.core.voice.GeminiLiveClient(api)
-
+    fun provideGemini(api: ApiClient): GeminiLiveClient = GeminiLiveClient(api)
     @Provides @Singleton
-    fun provideSttEngine(): com.max.ai.core.voice.SttEngine = com.max.ai.core.voice.SttEngine()
-
+    fun provideStt(): SttEngine = SttEngine()
     @Provides @Singleton
-    fun provideTtsEngine(): com.max.ai.core.voice.TtsEngine = com.max.ai.core.voice.TtsEngine()
+    fun provideTts(@ApplicationContext ctx: Context): TtsEngine = TtsEngine(ctx)
 }

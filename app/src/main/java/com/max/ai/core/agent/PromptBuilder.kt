@@ -1,40 +1,24 @@
 package com.max.ai.core.agent
 
 import com.max.ai.data.repository.MemoryRepository
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PromptBuilder @Inject constructor(
-    private val memoryRepository: MemoryRepository
-) {
-    private val json = Json { prettyPrint = true }
-
-    fun buildSystemPrompt(toolRegistry: ToolRegistry): String = buildString {
-        appendLine("You are Max AI, a Hinglish-first voice assistant for Android.")
-        appendLine()
-        appendLine("## Rules")
-        appendLine("- User speaks Hinglish (Hindi-English mix). Understand both.")
-        appendLine("- Respond in the SAME style: Hinglish for Hinglish, English for English.")
-        appendLine("- Use tools to execute real actions on the phone.")
-        appendLine("- Keep responses CONCISE (2-3 sentences max unless asked).")
-        appendLine("- Confirm before calls, messages, and destructive actions.")
-        appendLine()
-
-        val memories = memoryRepository.getAllMemories()
+class PromptBuilder @Inject constructor(private val repo: MemoryRepository) {
+    fun buildSystemPrompt(registry: ToolRegistry): String = buildString {
+        append("You are Max AI, a Hinglish-first voice assistant for Android.\n\n")
+        append("## Rules\n- User speaks Hinglish. Understand both.\n")
+        append("- Respond in SAME style as user. Keep responses CONCISE.\n")
+        append("- Use tools for real actions. Confirm destructive ones.\n\n")
+        val memories = runBlocking { repo.getAllMemories().firstOrNull() ?: emptyList() }
         if (memories.isNotEmpty()) {
-            appendLine("## Remembered Facts")
-            memories.forEach { appendLine("- ${it.key}: ${it.value}") }
-            appendLine()
+            append("## Remembered\n")
+            memories.forEach { append("- ${it.key}: ${it.value}\n") }
+            append("\n")
         }
-
-        appendLine("## Available Tools")
-        appendLine(toolRegistry.getToolDescriptions())
-    }
-
-    fun buildFunctionSchemas(toolRegistry: ToolRegistry): List<JsonObject> {
-        return toolRegistry.getAll().map { tool -> tool.parameters }
+        append("## Tools\n${registry.getToolDescriptions()}")
     }
 }

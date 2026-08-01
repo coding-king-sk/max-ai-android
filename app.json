@@ -1,0 +1,12 @@
+{
+  "name": "Max AI",
+  "version": "1.0.0",
+  "description": "Voice-first Android AI assistant",
+  "sdk": { "min": 29, "target": 35, "compile": 35 },
+  "kotlin": "2.1.0",
+  "compose": "2025.07.00",
+  "tools": 27,
+  "services": 5,
+  "license": "MIT",
+  "repository": "https://github.com/coding-king-sk/max-ai-android"
+}

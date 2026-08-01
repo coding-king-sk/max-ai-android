@@ -66,7 +66,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
 
-      - name: Upload Release APK (if exists)
+      - name: Upload Release APK (if signed)
         uses: actions/upload-artifact@v4
         with:
           name: max-ai-release
@@ -89,11 +89,11 @@ jobs:
         with:
           name: Max AI ${{ github.ref_name }}
           body: |
-            ## Max AI ${{ github.ref_name }} 🧠
+            ## Max AI ${{ github.ref_name }}
+
+            Automatic release from tag `${{ github.ref_name }}`.
             
-            Automatic release from tag ${{ github.ref_name }}.
-            
-            See [commits](https://github.com/coding-king-sk/max-ai-android/commits/${{ github.ref_name }}) for details.
+            Debug and release APKs attached below.
           draft: false
           prerelease: false
           files: |

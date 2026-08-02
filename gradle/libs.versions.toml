@@ -11,12 +11,9 @@ coroutines = "1.9.0"
 ktor = "3.0.3"
 coil = "3.0.4"
 datastore = "1.1.2"
-porcupine = "3.0.3"
 serialization = "1.7.3"
 activity = "1.9.3"
 core-ktx = "1.15.0"
-camerax = "1.4.1"
-mlkit = "16.0.1"
 
 [libraries]
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -49,12 +46,6 @@ coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
-camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
-camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
-camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
-camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
-mlkit-text = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkit" }
-porcupine-android = { group = "ai.picovoice", name = "porcupine-android", version.ref = "porcupine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

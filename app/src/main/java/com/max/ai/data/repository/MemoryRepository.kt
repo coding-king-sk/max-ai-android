@@ -14,7 +14,7 @@ class MemoryRepository @Inject constructor(private val dao: MemoryDao) {
     suspend fun remember(key: String, value: String) {
         val existing = dao.byKey(key)
         if (existing != null) {
-            dao.insert(existing.copy(value = value, ua = System.currentTimeMillis()))
+            dao.insert(existing.copy(value = value, updatedAt = System.currentTimeMillis()))
         } else {
             dao.insert(MemoryEntity(key = key, value = value))
         }
@@ -23,10 +23,10 @@ class MemoryRepository @Inject constructor(private val dao: MemoryDao) {
     suspend fun recall(query: String): List<MemoryEntity> = dao.search(query)
 
     suspend fun forget(key: String) {
-        dao.del(key)
+        dao.deleteKey(key)
     }
 
     suspend fun clearAll() {
-        dao.clear()
+        dao.deleteAll()
     }
 }

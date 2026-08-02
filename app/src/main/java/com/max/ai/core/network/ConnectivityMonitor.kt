@@ -14,31 +14,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Singleton
 class ConnectivityMonitor @Inject constructor(@ApplicationContext private val ctx: Context) {
-    private val _isOnline = MutableStateFlow(true)
-    val isOnline: StateFlow<Boolean> = _isOnline.asStateFlow()
-
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) { _isOnline.value = true }
-        override fun onLost(network: Network) { _isOnline.value = false }
-        override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
-            _isOnline.value = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        }
+    private val _online = MutableStateFlow(true)
+    val online: StateFlow<Boolean> = _online.asStateFlow()
+    private val cb = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(n: Network) { _online.value = true }
+        override fun onLost(n: Network) { _online.value = false }
     }
-
-    fun start() {
-        val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.registerNetworkCallback(NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build(), networkCallback)
-    }
-
-    fun stop() {
-        val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.unregisterNetworkCallback(networkCallback)
-    }
-
-    fun isCurrentlyOnline(): Boolean {
-        val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = cm.activeNetwork ?: return false
-        val caps = cm.getNetworkCapabilities(network) ?: return false
-        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
+    fun start() { (ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).registerNetworkCallback(NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build(), cb) }
+    fun stop() { (ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).unregisterNetworkCallback(cb) }
 }

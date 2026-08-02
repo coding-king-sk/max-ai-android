@@ -3,12 +3,6 @@
     <string name="app_name">Max AI</string>
     <string name="foreground_notification_title">Max AI listening…</string>
     <string name="foreground_notification_text">Say "Hey Max" to activate</string>
-    <string name="wake_word_detected">Hey Max detected!</string>
-    <string name="listening">Listening…</string>
-    <string name="thinking">Thinking…</string>
-    <string name="speaking">Speaking…</string>
-    <string name="offline_mode">Offline Mode</string>
-    <string name="permission_required">Permission Required</string>
     <string name="service_channel_name">Max AI Service</string>
     <string name="service_channel_desc">Background service for wake word detection</string>
 </resources>

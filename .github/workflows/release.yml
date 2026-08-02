@@ -1,81 +1,29 @@
 name: Build & Release APK
-
 on:
   push:
     branches: [main]
-    tags:
-      - 'v*'
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: write
-  packages: write
-
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
+        with: {java-version: '17', distribution: 'temurin'}
       - uses: gradle/actions/setup-gradle@v4
-
       - uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          build-tools: '34.0.0'
-          target: 'android-34'
-
-      - name: Setup Gradle Wrapper
-        run: |
-          chmod +x gradlew
-          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            echo "Downloading gradle-wrapper.jar..."
-            mkdir -p gradle/wrapper
-            curl -sL "https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar || \
-            curl -sL "https://github.com/gradle/gradle/raw/v8.11.1/gradle/wrapper/gradle-wrapper.jar" -o gradle/wrapper/gradle-wrapper.jar || \
-            echo "FAILED to download wrapper JAR - will try gradle wrapper command..."
-            if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-              gradle wrapper --gradle-version 8.11.1 2>/dev/null || true
-            fi
-          fi
-          ls -lh gradle/wrapper/
-          echo "Build starting..."
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
-
-      - name: Build Release APK
-        if: success() || failure()
-        run: ./gradlew assembleRelease --stacktrace --no-daemon
-        continue-on-error: true
-
+        with: {api-level: 34, build-tools: '34.0.0', target: 'android-34'}
+      - run: chmod +x gradlew
+      - run: ./gradlew assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: max-ai-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7
+        with: {name: max-ai-debug, path: app/build/outputs/apk/debug/app-debug.apk}
         continue-on-error: true
-
-      - uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: max-ai-release
-          path: app/build/outputs/apk/release/app-release.apk
-          retention-days: 7
-        continue-on-error: true
-
   release:
-    name: Create GitHub Release
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
@@ -84,14 +32,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           name: Max AI ${{ github.ref_name }}
-          body: |
-            ## Max AI ${{ github.ref_name }}
-            Automatic release from tag `${{ github.ref_name }}`.
-          draft: false
-          prerelease: false
-          files: |
-            max-ai-debug/app-debug.apk
-            max-ai-release/app-release.apk
+          files: max-ai-debug/app-debug.apk
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

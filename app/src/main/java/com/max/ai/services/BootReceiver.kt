@@ -1,17 +1,5 @@
 package com.max.ai.services
-
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
+import android.content.BroadcastReceiver; import android.content.Context; import android.content.Intent
 class BootReceiver : BroadcastReceiver() {
-
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            val serviceIntent = Intent(context, MaxForegroundService::class.java)
-            context.startForegroundService(serviceIntent)
-        }
-    }
+    override fun onReceive(c: Context, i: Intent) { if (i.action == Intent.ACTION_BOOT_COMPLETED) c.startForegroundService(Intent(c, MaxForegroundService::class.java)) }
 }

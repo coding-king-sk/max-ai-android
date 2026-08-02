@@ -1,31 +1,6 @@
 package com.max.ai.data.local.entity
-
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-
+import androidx.room.ColumnInfo; import androidx.room.Entity; import androidx.room.Index; import androidx.room.PrimaryKey
 @Entity(tableName = "memories", indices = [Index("key", unique = true)])
-data class MemoryEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(name = "key") val key: String,
-    @ColumnInfo(name = "value") val value: String,
-    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
-    @ColumnInfo(name = "updated_at") val updatedAt: Long = System.currentTimeMillis()
-)
-
-@Entity(tableName = "notes")
-data class NoteEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val title: String, val content: String,
-    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
-)
-
-@Entity(tableName = "command_logs")
-data class CommandLogEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val command: String, val response: String,
-    @ColumnInfo(name = "tools_used") val toolsUsed: String = "",
-    @ColumnInfo(name = "is_offline") val isOffline: Boolean = false,
-    val timestamp: Long = System.currentTimeMillis()
-)
+data class MemoryEntity(@PrimaryKey(autoGenerate = true) val id: Long = 0, @ColumnInfo(name = "key") val key: String, @ColumnInfo(name = "value") val value: String, @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(), @ColumnInfo(name = "updated_at") val updatedAt: Long = System.currentTimeMillis())
+@Entity(tableName = "notes") data class NoteEntity(@PrimaryKey(autoGenerate = true) val id: Long = 0, val title: String, val content: String, @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis())
+@Entity(tableName = "command_logs") data class CommandLogEntity(@PrimaryKey(autoGenerate = true) val id: Long = 0, val command: String, val response: String, @ColumnInfo(name = "tools_used") val toolsUsed: String = "", val timestamp: Long = System.currentTimeMillis())
